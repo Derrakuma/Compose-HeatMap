@@ -1,8 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
@@ -12,29 +10,29 @@ plugins {
   alias(libs.plugins.compose.compiler)
 }
 
+val distributionsDir = layout.buildDirectory.dir("distributions")
+val sampleWasmFile = layout.buildDirectory.file("compileSync/wasmJs/main/developmentExecutable/kotlin/heatmap-sample.wasm")
+
 kotlin {
   jvmToolchain(17)
 
   androidTarget {
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
       jvmTarget.set(JvmTarget.JVM_17)
-      apiVersion.set(KotlinVersion.KOTLIN_2_0)
-      languageVersion.set(KotlinVersion.KOTLIN_2_0)
     }
   }
 
   @OptIn(ExperimentalWasmDsl::class)
   wasmJs {
-    moduleName = "heatmap-sample"
+    outputModuleName.set("heatmap-sample")
     browser {
       binaries.executable()
       commonWebpackConfig {
         outputFileName = "heatmap-sample.js"
-        outputPath = file("$buildDir/distributions")
+        outputPath = distributionsDir.get().asFile
         devServer = KotlinWebpackConfig.DevServer(
-          static = mutableListOf("$buildDir/distributions")
+          static = mutableListOf(distributionsDir.get().asFile.absolutePath)
         )
       }
     }
@@ -50,8 +48,8 @@ kotlin {
 
     commonMain.dependencies {
       implementation(project(":library"))
-      implementation(compose.material)
-      implementation(compose.material3)
+      implementation(libs.compose.material)
+      implementation(libs.compose.material3)
       implementation(libs.kotlinx.datetime)
     }
 
@@ -127,21 +125,22 @@ compose.desktop {
 
 tasks.register<Copy>("copyHelperJs") {
   from(project(":library").file("src/wasmJsMain/resources/helper.js"))
-  into("$buildDir/distributions")
+  into(distributionsDir)
 }
 
 tasks.register<Copy>("copyHtml") {
   from(file("src/wasmJsMain/resources/index.html"))
-  into("$buildDir/distributions")
+  into(distributionsDir)
 }
 
 tasks.register<Copy>("copyWasmFile") {
   dependsOn("compileDevelopmentExecutableKotlinWasmJs")
-  from(file("$buildDir/compileSync/wasmJs/main/developmentExecutable/kotlin/heatmap-sample.wasm"))
-  into("$buildDir/distributions")
+  from(sampleWasmFile)
+  into(distributionsDir)
   doLast {
-    println("Attempted to copy heatmap-sample.wasm from $buildDir/compileSync/wasmJs/main/developmentExecutable/kotlin/")
-    if (!file("$buildDir/compileSync/wasmJs/main/developmentExecutable/kotlin/heatmap-sample.wasm").exists()) {
+    val wasmFile = sampleWasmFile.get().asFile
+    println("Attempted to copy heatmap-sample.wasm from ${wasmFile.parentFile}")
+    if (!wasmFile.exists()) {
       println("File not found! Check if the path is correct.")
     } else {
       println("Copied heatmap-sample.wasm to distributions directory.")
@@ -149,6 +148,6 @@ tasks.register<Copy>("copyWasmFile") {
   }
 }
 
-tasks.getByName("wasmJsBrowserRun").dependsOn("copyHelperJs")
-tasks.getByName("wasmJsBrowserRun").dependsOn("copyHtml")
-tasks.getByName("wasmJsBrowserRun").dependsOn("copyWasmFile")
+tasks.matching { it.name == "wasmJsBrowserRun" }.configureEach {
+  dependsOn("copyHelperJs", "copyHtml", "copyWasmFile")
+}

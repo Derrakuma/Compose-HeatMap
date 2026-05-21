@@ -1,8 +1,6 @@
 import com.vanniktech.maven.publish.SonatypeHost
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
@@ -19,17 +17,14 @@ kotlin {
   androidTarget {
     publishLibraryVariants("debug", "release")
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
       jvmTarget.set(JvmTarget.JVM_17)
-      apiVersion.set(KotlinVersion.KOTLIN_2_0)
-      languageVersion.set(KotlinVersion.KOTLIN_2_0)
     }
   }
 
   @OptIn(ExperimentalWasmDsl::class)
   wasmJs {
-    moduleName = "heatmap"
+    outputModuleName.set("heatmap")
     browser {
       binaries.executable()
       commonWebpackConfig {
@@ -56,8 +51,8 @@ kotlin {
       implementation(libs.androidx.activity.compose)
     }
     commonMain.dependencies {
-      implementation(compose.foundation)
-      implementation(compose.ui)
+      implementation(libs.compose.foundation)
+      implementation(libs.compose.ui)
       implementation(libs.kotlinx.datetime)
     }
     desktopMain.dependencies {
@@ -67,7 +62,7 @@ kotlin {
       implementation(libs.kotlin.test)
     }
     desktopTest.dependencies {
-      implementation(compose.desktop.uiTestJUnit4)
+      implementation(libs.compose.ui.test.junit4)
     }
   }
 
