@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package com.fleeys.heatmap
+package com.fleeys.heatmap.util
 
 import kotlinx.datetime.Month
 import platform.Foundation.*
@@ -21,7 +21,7 @@ actual fun getLocalizedMonthName(month: Month): String {
   dateFormatter.dateFormat = "MMMM"
   dateFormatter.locale = NSLocale.currentLocale
   val dateComponents = NSDateComponents()
-  dateComponents.month = month.ordinal + 1
+  dateComponents.month = (month.ordinal + 1).toLong()
   val date = NSCalendar.currentCalendar.dateFromComponents(dateComponents)!!
   return dateFormatter.stringFromDate(date)
 }

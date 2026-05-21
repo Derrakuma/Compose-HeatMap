@@ -17,7 +17,7 @@ kotlin {
   jvmToolchain(17)
 
   androidTarget {
-    publishLibraryVariants("release")
+    publishLibraryVariants("debug", "release")
 
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
@@ -42,6 +42,11 @@ kotlin {
   }
 
   jvm("desktop")
+
+  listOf(
+    iosArm64(),
+    iosSimulatorArm64(),
+  )
 
   sourceSets {
     val desktopMain by getting
