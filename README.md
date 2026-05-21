@@ -1,6 +1,6 @@
 # Compose-HeatMap
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.fleeys/heatmap)](https://central.sonatype.com/artifact/com.fleeys/heatmap) ![Android](https://img.shields.io/badge/Platform-Android-brightgreen.svg?logo=android) ![Desktop](https://img.shields.io/badge/Platform-Desktop-8A2BE2.svg?logo=openjdk) ![WasmJS](https://img.shields.io/badge/Platform-WASM%20%2F%20JS-yellow.svg?logo=javascript)
+[![Maven Central](https://img.shields.io/maven-central/v/com.fleeys/heatmap)](https://central.sonatype.com/artifact/com.fleeys/heatmap) ![Android](https://img.shields.io/badge/Platform-Android-brightgreen.svg?logo=android) ![iOS](https://img.shields.io/badge/Platform-iOS-black.svg?logo=apple) ![Desktop](https://img.shields.io/badge/Platform-Desktop-8A2BE2.svg?logo=openjdk) ![WasmJS](https://img.shields.io/badge/Platform-WASM%20%2F%20JS-yellow.svg?logo=javascript)
 
 Effortlessly create GitHub-style heatmaps in Jetpack Compose—perfect for visualizing a variety of time-based data patterns.
 
