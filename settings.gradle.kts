@@ -72,5 +72,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Compose-HeatMap"
-include(":sample")
 include(":library")

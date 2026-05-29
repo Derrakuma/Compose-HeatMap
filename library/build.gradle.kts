@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
-  alias(libs.plugins.androidLibrary)
+  alias(libs.plugins.androidMultiplatformLibrary)
   alias(libs.plugins.kotlinMultiplatform)
   alias(libs.plugins.composeMultiplatform)
   alias(libs.plugins.compose.compiler)
@@ -14,9 +14,13 @@ plugins {
 kotlin {
   jvmToolchain(17)
 
-  androidTarget {
-    publishLibraryVariants("debug", "release")
-
+  androidLibrary {
+    namespace = "com.fleeys.heatmap.core"
+    compileSdk = rootProject.extra["compile_sdk"] as Int
+    minSdk = 21
+    androidResources {
+      enable = true
+    }
     compilerOptions {
       jvmTarget.set(JvmTarget.JVM_17)
     }
@@ -68,29 +72,8 @@ kotlin {
 
 }
 
-android {
-  namespace = "com.fleeys.heatmap.core"
-  compileSdk = rootProject.extra["compile_sdk"] as Int
-
-  defaultConfig {
-    minSdk = 21
-
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    consumerProguardFiles("consumer-rules.pro")
-  }
-
-  sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-  sourceSets["main"].res.srcDirs("src/androidMain/res")
-
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-  }
-
-  dependencies {
-    debugImplementation(libs.compose.ui.tooling)
-  }
-
+dependencies {
+  "androidRuntimeClasspath"(libs.compose.ui.tooling)
 }
 
 tasks.register<Copy>("copyJsResources") {

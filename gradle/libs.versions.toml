@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.3.20"
 kotlinxDatetime = "0.6.1"
-agp = "8.9.3"
+agp = "9.1.1"
 coreKtx = "1.15.0"
 compose-multiplatform = "1.11.0"
 activityCompose = "1.9.3"
@@ -29,6 +29,7 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
+androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
